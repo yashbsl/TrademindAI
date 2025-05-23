@@ -6,6 +6,8 @@ import { ActiveAlerts } from '@/components/ActiveAlerts'
 import { WalletStatus } from '@/components/WalletStatus'
 import { LiveTradingChart } from '@/components/LiveTradingChart'
 import { AutomatedTradingEngine } from '@/components/AutomatedTradingEngine'
+import { TradingHeatmap } from '@/components/TradingHeatmap'
+import { PerformanceAnalytics } from '@/components/PerformanceAnalytics'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Link } from 'wouter'
@@ -31,23 +33,33 @@ export function Dashboard() {
           <AutomatedTradingEngine />
         </div>
 
-        {/* Live Trading Chart */}
+        {/* Live Trading Chart & Wallet */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <LiveTradingChart />
           <WalletStatus />
         </div>
 
-        {/* Main Content Grid */}
+        {/* Market Overview Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <RealTimePrices />
-          <SMAStrategy />
+          <TradingHeatmap />
         </div>
 
-        {/* Trade History and Alerts */}
+        {/* Performance Analytics */}
+        <div className="mb-8">
+          <PerformanceAnalytics />
+        </div>
+
+        {/* Strategy & Trade History */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <SMAStrategy />
           <div className="lg:col-span-2">
             <TradeHistory />
           </div>
+        </div>
+
+        {/* Active Alerts */}
+        <div className="mb-8">
           <ActiveAlerts />
         </div>
 
