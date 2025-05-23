@@ -52,6 +52,43 @@ const priceHistory: { [token: string]: number[] } = {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Create demo user on startup
+  const demoUser = await storage.createUser({
+    email: 'demo@trademindai.com',
+    password: await bcrypt.hash('demo123', 10),
+    plan: 'free'
+  });
+
+  // Create demo wallet
+  await storage.createWallet({
+    userId: demoUser.id,
+    address: '0x742d35Cc6635C0532925a3b8D21C2f8E2f4f8E11',
+    network: 'bsc'
+  });
+
+  // Create demo strategy
+  await storage.createStrategy({
+    userId: demoUser.id,
+    name: 'BNB SMA Strategy',
+    type: 'sma_crossover',
+    params: { shortPeriod: 5, longPeriod: 20, tokens: ['binancecoin'] },
+    active: true
+  });
+
+  // Create demo alerts
+  await storage.createAlert({
+    userId: demoUser.id,
+    title: 'Welcome to TradeMindAI!',
+    message: 'Your AI trading bot is ready. Start by connecting your MetaMask wallet.',
+    type: 'info'
+  });
+
+  await storage.createAlert({
+    userId: demoUser.id,
+    title: 'BNB Buy Signal Generated',
+    message: 'SMA5 crossed above SMA20 for BNB - Strong buy signal detected!',
+    type: 'success'
+  });
   // Auth routes
   app.post("/api/auth/register", async (req, res) => {
     try {
