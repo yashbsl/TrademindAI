@@ -3,6 +3,8 @@ import { RealTimePrices } from '@/components/RealTimePrices'
 import { SMAStrategy } from '@/components/SMAStrategy'
 import { TradeHistory } from '@/components/TradeHistory'
 import { ActiveAlerts } from '@/components/ActiveAlerts'
+import { WalletStatus } from '@/components/WalletStatus'
+import { AdvancedTradingChart } from '@/components/AdvancedTradingChart'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Link } from 'wouter'
@@ -22,6 +24,12 @@ export function Dashboard() {
 
         {/* Stats Overview */}
         <StatsOverview />
+
+        {/* Advanced Trading Chart */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <AdvancedTradingChart />
+          <WalletStatus />
+        </div>
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
