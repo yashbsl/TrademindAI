@@ -1,0 +1,109 @@
+Build a full-stack AI-powered trading bot platform for BNB Chain called TradeMindAI using the Replit environment. The platform allows users to connect their MetaMask wallets, simulate or analyze trades using real-time data from PancakeSwap, and subscribe to alerts and premium features via Stripe.
+
+✅ Core Features:
+🔐 Authentication:
+Use Clerk or custom email/password auth via JWT
+
+Allow Google login (optional)
+
+🔗 MetaMask Integration:
+Use Wagmi + Ethers.js in frontend
+
+Detect and connect BNB Chain wallets
+
+Store wallet address in backend DB
+
+📡 Real-Time Data:
+Get live BNB token prices via:
+
+PancakeSwap GraphQL Subgraph
+
+CoinGecko API
+
+Binance API
+
+Display live token charts with SMA overlays
+
+📈 AI Strategy Engine:
+Start with SMA crossover strategy
+
+Buy when SMA5 > SMA20, sell when reversed
+
+Simulate trades and log decision with timestamps
+
+Store strategy config per user
+
+Future-proof to plug in ML models
+
+📊 Trade Logs + Dashboard:
+Show user's simulated trades (token, price, action, PnL)
+
+Visualize strategy performance
+
+Filter by date, token, outcome
+
+💳 SaaS Billing (Stripe):
+Stripe Checkout integration
+
+Plans: Free vs Pro
+
+Store plan data in DB with user
+
+Pro gets unlimited simulations, alerts, backtests
+
+🔔 Smart Alerts:
+Triggered when signal conditions match
+
+Delivered via email/in-app
+
+Alert preferences per user
+
+🧱 Backend (API + DB):
+Use Node.js + Express
+
+Connect to PostgreSQL via Prisma or Sequelize
+
+Secure API routes for strategies, trades, signals
+
+Optional: Rate limit via API key model
+
+🧩 Data Models:
+User: email, password (hashed), stripeId, plan
+
+Wallet: userId, address, network
+
+Strategy: name, params, userId
+
+Trade: strategyId, walletId, price, type, timestamp
+
+Signal: type, strategyId, confidence, triggeredAt
+
+Alert: userId, signalId, sentAt, via
+
+Plan: name, price, stripePriceId
+
+🎨 UI/UX:
+Use Next.js + Tailwind in frontend
+
+Include dark mode, tooltips, transitions
+
+Responsive dashboard UI (cards, charts, tables)
+
+Pages: Login, Dashboard, Signals, Strategy Builder, Settings, Billing
+
+🛠️ Tech Stack:
+Frontend: Next.js, TypeScript, TailwindCSS, Recharts
+
+Backend: Node.js, Express, Prisma/PostgreSQL
+
+Wallet: Wagmi + Ethers.js
+
+Live Data: CoinGecko, PancakeSwap Subgraph
+
+Auth: Clerk/Auth.js or custom JWT
+
+Billing: Stripe
+
+Deploy: Replit
+
+This project is for the BNB AI Hackathon (AI x DeFi track). Do not use mock data. Connect to live sources, simulate real trades, and follow DeFi + AI best practices. The code must run entirely on Replit, be visually impressive, and ready for demo
