@@ -2,6 +2,8 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import Stripe from "stripe";
 import { storage } from "./storage";
+import { db } from "./db";
+import { plans } from "@shared/schema";
 import { insertUserSchema, insertWalletSchema, insertStrategySchema, insertTradeSchema, insertSignalSchema, insertAlertSchema } from "@shared/schema";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -52,43 +54,70 @@ const priceHistory: { [token: string]: number[] } = {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Create demo user on startup
-  const demoUser = await storage.createUser({
-    email: 'demo@trademindai.com',
-    password: await bcrypt.hash('demo123', 10),
-    plan: 'free'
-  });
+  // Initialize database with plans
+  try {
+    const existingPlans = await storage.getAllPlans();
+    if (existingPlans.length === 0) {
+      // Create default plans
+      await db.insert(plans).values([
+        {
+          name: "Free",
+          price: "0",
+          stripePriceId: "price_free",
+          features: JSON.stringify(["Basic SMA strategy", "5 trades/day", "Basic alerts"])
+        },
+        {
+          name: "Pro",
+          price: "29.00",
+          stripePriceId: process.env.STRIPE_PRICE_ID || "price_pro",
+          features: JSON.stringify(["Advanced AI strategies", "Unlimited trades", "Real-time alerts", "Backtesting", "Priority support"])
+        }
+      ]);
+    }
 
-  // Create demo wallet
-  await storage.createWallet({
-    userId: demoUser.id,
-    address: '0x742d35Cc6635C0532925a3b8D21C2f8E2f4f8E11',
-    network: 'bsc'
-  });
+    // Check if demo user exists, if not create one
+    const existingDemoUser = await storage.getUserByEmail('demo@trademindai.com');
+    if (!existingDemoUser) {
+      const demoUser = await storage.createUser({
+        email: 'demo@trademindai.com',
+        password: await bcrypt.hash('demo123', 10),
+        plan: 'free'
+      });
 
-  // Create demo strategy
-  await storage.createStrategy({
-    userId: demoUser.id,
-    name: 'BNB SMA Strategy',
-    type: 'sma_crossover',
-    params: { shortPeriod: 5, longPeriod: 20, tokens: ['binancecoin'] },
-    active: true
-  });
+      // Create demo wallet
+      await storage.createWallet({
+        userId: demoUser.id,
+        address: '0x742d35Cc6635C0532925a3b8D21C2f8E2f4f8E11',
+        network: 'bsc'
+      });
 
-  // Create demo alerts
-  await storage.createAlert({
-    userId: demoUser.id,
-    title: 'Welcome to TradeMindAI!',
-    message: 'Your AI trading bot is ready. Start by connecting your MetaMask wallet.',
-    type: 'info'
-  });
+      // Create demo strategy
+      await storage.createStrategy({
+        userId: demoUser.id,
+        name: 'BNB SMA Strategy',
+        type: 'sma_crossover',
+        params: { shortPeriod: 5, longPeriod: 20, tokens: ['binancecoin'] },
+        active: true
+      });
 
-  await storage.createAlert({
-    userId: demoUser.id,
-    title: 'BNB Buy Signal Generated',
-    message: 'SMA5 crossed above SMA20 for BNB - Strong buy signal detected!',
-    type: 'success'
-  });
+      // Create demo alerts
+      await storage.createAlert({
+        userId: demoUser.id,
+        title: 'Welcome to TradeMindAI!',
+        message: 'Your AI trading bot is ready. Start by connecting your MetaMask wallet.',
+        type: 'info'
+      });
+
+      await storage.createAlert({
+        userId: demoUser.id,
+        title: 'BNB Buy Signal Generated',
+        message: 'SMA5 crossed above SMA20 for BNB - Strong buy signal detected!',
+        type: 'success'
+      });
+    }
+  } catch (error) {
+    console.log('Database initialization skipped or completed:', error.message);
+  }
   // Auth routes
   app.post("/api/auth/register", async (req, res) => {
     try {
