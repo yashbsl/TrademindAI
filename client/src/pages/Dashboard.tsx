@@ -5,6 +5,7 @@ import { TradeHistory } from '@/components/TradeHistory'
 import { ActiveAlerts } from '@/components/ActiveAlerts'
 import { WalletStatus } from '@/components/WalletStatus'
 import { AdvancedTradingChart } from '@/components/AdvancedTradingChart'
+import { AutomatedTradingEngine } from '@/components/AutomatedTradingEngine'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Link } from 'wouter'
@@ -24,6 +25,11 @@ export function Dashboard() {
 
         {/* Stats Overview */}
         <StatsOverview />
+
+        {/* AI Trading Engine */}
+        <div className="mb-8">
+          <AutomatedTradingEngine />
+        </div>
 
         {/* Advanced Trading Chart */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
