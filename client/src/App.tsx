@@ -12,14 +12,23 @@ import { Sidebar } from '@/components/Sidebar';
 import { Header } from '@/components/Header';
 import { Dashboard } from '@/pages/Dashboard';
 import Subscribe from '@/pages/Subscribe';
+import Login from '@/pages/Login';
+import Signals from '@/pages/Signals';
+import Strategies from '@/pages/Strategies';
+import Trades from '@/pages/Trades';
+import Alerts from '@/pages/Alerts';
 import NotFound from "@/pages/not-found";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Dashboard} />
+      <Route path="/login" component={Login} />
+      <Route path="/signals" component={Signals} />
+      <Route path="/strategies" component={Strategies} />
+      <Route path="/trades" component={Trades} />
+      <Route path="/alerts" component={Alerts} />
       <Route path="/subscribe" component={Subscribe} />
-      {/* Add more routes as needed */}
       <Route component={NotFound} />
     </Switch>
   );

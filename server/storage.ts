@@ -91,6 +91,9 @@ export class MemStorage implements IStorage {
     const user: User = {
       ...insertUser,
       id: this.currentUserId++,
+      stripeCustomerId: insertUser.stripeCustomerId || null,
+      stripeSubscriptionId: insertUser.stripeSubscriptionId || null,
+      plan: insertUser.plan || 'free',
       createdAt: new Date(),
     };
     this.users.set(user.id, user);
@@ -123,6 +126,7 @@ export class MemStorage implements IStorage {
     const wallet: Wallet = {
       ...insertWallet,
       id: this.currentWalletId++,
+      network: insertWallet.network || 'bsc',
       createdAt: new Date(),
     };
     this.wallets.set(wallet.id, wallet);
