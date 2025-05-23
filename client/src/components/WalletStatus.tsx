@@ -1,44 +1,76 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Wallet, CheckCircle, AlertCircle, ExternalLink } from 'lucide-react'
-import { useAccount, useConnect, useDisconnect, useBalance } from 'wagmi'
+import { Wallet, CheckCircle, AlertCircle, ExternalLink, Zap, RefreshCw } from 'lucide-react'
+import { useAccount, useConnect, useDisconnect, useBalance, useSwitchChain } from 'wagmi'
 import { injected } from 'wagmi/connectors'
 import { bsc } from 'wagmi/chains'
 import { useToast } from '@/hooks/use-toast'
 
 export function WalletStatus() {
   const { address, isConnected, chain } = useAccount()
-  const { connect } = useConnect()
+  const { connect, connectors, error, isLoading } = useConnect()
   const { disconnect } = useDisconnect()
+  const { switchChain } = useSwitchChain()
   const { toast } = useToast()
   const [isConnecting, setIsConnecting] = useState(false)
+  const [walletInstalled, setWalletInstalled] = useState(false)
 
-  const { data: balance } = useBalance({
+  useEffect(() => {
+    // Check if MetaMask is installed
+    const checkWallet = () => {
+      const isInstalled = typeof window !== 'undefined' && typeof window.ethereum !== 'undefined'
+      setWalletInstalled(isInstalled)
+    }
+    checkWallet()
+  }, [])
+
+  const { data: balance, refetch: refetchBalance } = useBalance({
     address: address,
     chainId: bsc.id,
   })
 
   const handleConnect = async () => {
+    if (!walletInstalled) {
+      window.open('https://metamask.io/download/', '_blank')
+      return
+    }
+
     setIsConnecting(true)
     try {
-      await connect({ 
-        connector: injected(),
-        chainId: bsc.id 
-      })
+      const connector = connectors.find(c => c.id === 'injected') || connectors[0]
+      await connect({ connector })
+      
       toast({
-        title: "Wallet Connected!",
-        description: "Successfully connected to BNB Smart Chain",
+        title: "🎉 Wallet Connected!",
+        description: "Successfully connected to your MetaMask wallet",
       })
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Connection error:', error)
       toast({
         title: "Connection Failed",
-        description: "Please make sure MetaMask is installed and try again",
+        description: error.message || "Please try again",
         variant: "destructive",
       })
     }
     setIsConnecting(false)
+  }
+
+  const handleSwitchToBSC = async () => {
+    try {
+      await switchChain({ chainId: bsc.id })
+      toast({
+        title: "Network Switched",
+        description: "Successfully switched to BNB Smart Chain",
+      })
+    } catch (error: any) {
+      toast({
+        title: "Network Switch Failed", 
+        description: "Please switch to BNB Smart Chain manually in MetaMask",
+        variant: "destructive",
+      })
+    }
   }
 
   const handleDisconnect = () => {

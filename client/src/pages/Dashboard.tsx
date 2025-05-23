@@ -4,7 +4,7 @@ import { SMAStrategy } from '@/components/SMAStrategy'
 import { TradeHistory } from '@/components/TradeHistory'
 import { ActiveAlerts } from '@/components/ActiveAlerts'
 import { WalletStatus } from '@/components/WalletStatus'
-import { AdvancedTradingChart } from '@/components/AdvancedTradingChart'
+import { LiveTradingChart } from '@/components/LiveTradingChart'
 import { AutomatedTradingEngine } from '@/components/AutomatedTradingEngine'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -31,9 +31,9 @@ export function Dashboard() {
           <AutomatedTradingEngine />
         </div>
 
-        {/* Advanced Trading Chart */}
+        {/* Live Trading Chart */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <AdvancedTradingChart />
+          <LiveTradingChart />
           <WalletStatus />
         </div>
 
