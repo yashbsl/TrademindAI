@@ -28,4 +28,10 @@ export default defineConfig({
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
   },
+
+  server: {
+    hmr: {
+      overlay: false,  // disables the red error overlay in the browser on runtime errors
+    },
+  },
 });
